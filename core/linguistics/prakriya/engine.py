@@ -33,6 +33,13 @@ SUTRA_7_3_84 = SutraRef("7.3.84", "sārvadhātukārdhadhātukayoḥ", SutraType.
 SUTRA_7_3_101 = SutraRef("7.3.101", "ato dīrgho yañi", SutraType.VIDHI)
 SUTRA_8_2_66 = SutraRef("8.2.66", "sasajuṣo ruḥ", SutraType.VIDHI)
 SUTRA_8_3_15 = SutraRef("8.3.15", "kharavasānayor visarjanīyaḥ", SutraType.VIDHI)
+SUTRA_VARNAMELANA = SutraRef("varṇa-melana", "saṃyoga / padanirvṛtti", SutraType.VIDHI)
+
+
+class Prayoga(Enum):
+    KARTARI = "kartari"
+    KARMANI = "karmaṇi"
+    BHAVE = "bhāve"
 
 
 class Gana(Enum):
@@ -92,7 +99,7 @@ def derive_lat_kartari(
         left_operand=dhatu_upadesha,
         right_operand="",
         output=dhatu_upadesha,
-        metadata={"stage": "dhātu_saṃjñā"}
+        metadata={"stage": "dhātu_saṃjñā"},
     )
 
     # 2. 3.2.123 Lakāra vidhi
@@ -101,7 +108,7 @@ def derive_lat_kartari(
         left_operand=dhatu_upadesha,
         right_operand="laṭ",
         output=f"{dhatu_upadesha} + laṭ",
-        metadata={"stage": "lakāra_vidhi"}
+        metadata={"stage": "lakāra_vidhi"},
     )
 
     # 3. 3.4.78 Tiṅ-ādeśa
@@ -110,7 +117,7 @@ def derive_lat_kartari(
         left_operand=dhatu_upadesha,
         right_operand=raw_tin,
         output=f"{dhatu_upadesha} + {raw_tin}",
-        metadata={"stage": "tiṅ_ādeśa"}
+        metadata={"stage": "tiṅ_ādeśa"},
     )
 
     # 4. Handle jhi -> anti (7.1.3 jho'ntaḥ) vs standard it-lopa (1.3.9)
@@ -121,7 +128,7 @@ def derive_lat_kartari(
             left_operand="jhi",
             right_operand="",
             output=f"{dhatu_upadesha} + {tin_shuddha}",
-            metadata={"stage": "jho_antaḥ"}
+            metadata={"stage": "jho_antaḥ"},
         )
     else:
         tin_shuddha = apply_it_lopa(raw_tin)
@@ -130,7 +137,7 @@ def derive_lat_kartari(
             left_operand=raw_tin,
             right_operand="",
             output=f"{dhatu_upadesha} + {tin_shuddha}",
-            metadata={"stage": "it_lopa_tiṅ"}
+            metadata={"stage": "it_lopa_tiṅ"},
         )
 
     # 5. 3.1.68 Vikaraṇa (kartari śap for Bhvādi)
@@ -140,7 +147,7 @@ def derive_lat_kartari(
             left_operand=dhatu_upadesha,
             right_operand="śap",
             output=f"{dhatu_upadesha} + śap + {tin_shuddha}",
-            metadata={"stage": "vikaraṇa"}
+            metadata={"stage": "vikaraṇa"},
         )
 
         # 6. It-lopa on śap (śap -> a)
@@ -150,7 +157,7 @@ def derive_lat_kartari(
             left_operand="śap",
             right_operand="",
             output=f"{dhatu_upadesha} + {vikarana} + {tin_shuddha}",
-            metadata={"stage": "it_lopa_vikaraṇa"}
+            metadata={"stage": "it_lopa_vikaraṇa"},
         )
 
         # 7. 7.3.84 Guṇa on ik-ending dhātu before sārvadhātuka (bhū -> bho)
@@ -162,7 +169,7 @@ def derive_lat_kartari(
                 left_operand=dhatu_upadesha,
                 right_operand=vikarana,
                 output=f"{dhatu_guna} + {vikarana} + {tin_shuddha}",
-                metadata={"stage": "aṅga_guṇa"}
+                metadata={"stage": "aṅga_guṇa"},
             )
 
             # 8. 6.1.78 eco'yavāyāvaḥ (bho + a -> bhava)
@@ -173,13 +180,13 @@ def derive_lat_kartari(
                 left_operand=dhatu_guna,
                 right_operand=vikarana,
                 output=f"{base_anga} + {tin_shuddha}",
-                metadata={"stage": "eco_yavāyāvaḥ"}
+                metadata={"stage": "eco_yavāyāvaḥ"},
             )
         else:
             base_anga = f"{dhatu_upadesha}{vikarana}"
 
-        # 9. Aṅga adjustments before specific terminations
-        # Case A: 6.1.97 ato guṇe for anti (bhava + anti -> bhavanti)
+        # 9. Aṅga adjustments and morpheme combination
+        # Case A: 7.1.3 + 6.1.97 ato guṇe for anti (bhava + anti -> bhavanti)
         if tin_shuddha == "anti":
             merged = base_anga[:-1] + tin_shuddha
             tree.record_step(
@@ -187,7 +194,7 @@ def derive_lat_kartari(
                 left_operand=base_anga,
                 right_operand=tin_shuddha,
                 output=merged,
-                metadata={"stage": "ato_guṇe"}
+                metadata={"stage": "ato_guṇe"},
             )
             final_form = merged
 
@@ -200,11 +207,19 @@ def derive_lat_kartari(
                 left_operand=base_anga,
                 right_operand=tin_shuddha,
                 output=final_form,
-                metadata={"stage": "ato_dīrgho_yañi"}
+                metadata={"stage": "ato_dīrgho_yañi"},
             )
 
+        # Case C: Standard joining (bhava + ti -> bhavati, bhava + si -> bhavasi, etc.)
         else:
             final_form = f"{base_anga}{tin_shuddha}"
+            tree.record_step(
+                rule_applied=SUTRA_VARNAMELANA,
+                left_operand=base_anga,
+                right_operand=tin_shuddha,
+                output=final_form,
+                metadata={"stage": "padanirvṛtti"},
+            )
 
         # 10. Padānta visarga (8.2.66 sasajuṣo ruḥ -> 8.3.15 kharavasānayoḥ)
         if final_form.endswith("s"):
@@ -214,7 +229,7 @@ def derive_lat_kartari(
                 left_operand=final_form,
                 right_operand="",
                 output=visarga_form,
-                metadata={"stage": "avasāne_visargaḥ"}
+                metadata={"stage": "avasāne_visargaḥ"},
             )
             final_form = visarga_form
 
