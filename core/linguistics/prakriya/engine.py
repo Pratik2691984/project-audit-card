@@ -96,7 +96,6 @@ PARASMAIPADA_MAP = {
 }
 
 YAN_PRATYAHARA = set(expand_pratyahara("yañ"))
-HAL_CONSONANTS = set(expand_pratyahara("hal"))
 
 KUHO_SCU_MAP = {"k": "c", "kh": "ch", "g": "j", "gh": "jh", "h": "jh"}
 CARCA_MAP = {
@@ -173,9 +172,9 @@ VIKARANA_TABLE: Dict[Gana, VikaranaSpec] = {
 
 
 def apply_it_lopa(pratyaya: str) -> str:
-    """Strips canonical it markers per 1.3.3 (final hal) and 1.3.8 (initial ś)."""
+    """Strips canonical it-markers (p, n, m, ś), preserving inflectional consonants."""
     res = pratyaya
-    if res and res[-1] in HAL_CONSONANTS:
+    if res.endswith("p") or res.endswith("n") or res.endswith("m"):
         res = res[:-1]
     if res.startswith("ś"):
         res = res[1:]
@@ -473,14 +472,10 @@ def derive_lat_kartari(
             metadata={"stage": "it_lopa_vikaraṇa"},
         )
 
-        # Infix insertion via 1.1.47
         if is_pit:
-            # Full infix 'na'
             base = insert_mit_infix(dhatu_upadesha, vikarana, tree)
-            # 8.4.1 retroflexion on 'n' after 'r'
             base = retroflex_n_after_r(base, tree)
         else:
-            # 6.4.111 śnasorallopaḥ: elision of 'a' in 'na' before apit affixes -> 'n'
             infix_elided = "n"
             tree.record_step(
                 rule_applied=SUTRA_6_4_111,
@@ -501,7 +496,7 @@ def derive_lat_kartari(
                 output=f"{base} + {tin_dha}",
                 metadata={"stage": "jhaṣas_tathor_dhaḥ"},
             )
-            base_d = base[:-1] + "d"
+            base_d = base[:-2] + "d"  # replace trailing 'dh' with 'd'
             final_form = base_d + tin_dha
             tree.record_step(
                 rule_applied=SUTRA_8_4_53,
