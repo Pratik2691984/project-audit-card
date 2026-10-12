@@ -1,0 +1,768 @@
+{
+  "schemaVersion": "2.4.0",
+  "generatedAt": "2026-10-12T18:32:01.593Z",
+  "ecosystemScore": 316,
+  "maxEcosystemScore": 360,
+  "projects": [
+    {
+      "id": "proj-q-kerr-cat-cv",
+      "name": "kerr-cat-cv-stabilizer-v2",
+      "directoryName": "kerr-cat-cv-stabilizer-v2",
+      "assignedTrack": "Quantum",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "configs/kerr_cavity_params.yaml",
+      "updatedAt": "2026-10-12T18:09:03.750Z",
+      "promotedInBatch": false,
+      "remediationPlan": "Ingest into core/quantum/kerr_cat.py; verify parity preservation bound at atol=1e-09.",
+      "details": {
+        "actualFileCount": 38
+      }
+    },
+    {
+      "id": "proj-q-m3-readout",
+      "name": "m3-readout-mitigation-engine",
+      "directoryName": "m3-readout-mitigation-engine",
+      "assignedTrack": "Quantum",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:00:00.000Z",
+      "promotedInBatch": false,
+      "remediationPlan": "Unify tensored readout error correction matrix into core/quantum/mitigation.py.",
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-q-3",
+      "name": "repo-q-3",
+      "directoryName": "repo-q-3",
+      "assignedTrack": "Quantum",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": false,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-q-4",
+      "name": "repo-q-4",
+      "directoryName": "repo-q-4",
+      "assignedTrack": "Quantum",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": false,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-q-5",
+      "name": "repo-q-5",
+      "directoryName": "repo-q-5",
+      "assignedTrack": "Quantum",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": false,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-q-6",
+      "name": "repo-q-6",
+      "directoryName": "repo-q-6",
+      "assignedTrack": "Quantum",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": true,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-q-7",
+      "name": "repo-q-7",
+      "directoryName": "repo-q-7",
+      "assignedTrack": "Quantum",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": true,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-q-8",
+      "name": "repo-q-8",
+      "directoryName": "repo-q-8",
+      "assignedTrack": "Quantum",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": true,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-q-magic-distill",
+      "name": "repo-q-9",
+      "directoryName": "repo-q-9",
+      "assignedTrack": "Quantum",
+      "completionStage": "exploratory",
+      "passedChecksCount": 3,
+      "scorePercentage": 33,
+      "isHardeningEligible": false,
+      "disposition": "ARCHIVE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:00:00.000Z",
+      "promotedInBatch": false,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 9
+      }
+    },
+    {
+      "id": "proj-q-qaoa-mixer",
+      "name": "repo-q-10",
+      "directoryName": "repo-q-10",
+      "assignedTrack": "Quantum",
+      "completionStage": "exploratory",
+      "passedChecksCount": 3,
+      "scorePercentage": 33,
+      "isHardeningEligible": false,
+      "disposition": "ARCHIVE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:00:00.000Z",
+      "promotedInBatch": false,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 9
+      }
+    },
+    {
+      "id": "proj-l-1",
+      "name": "repo-l-1",
+      "directoryName": "repo-l-1",
+      "assignedTrack": "Linguistics",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": false,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-l-2",
+      "name": "repo-l-2",
+      "directoryName": "repo-l-2",
+      "assignedTrack": "Linguistics",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": false,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-l-3",
+      "name": "repo-l-3",
+      "directoryName": "repo-l-3",
+      "assignedTrack": "Linguistics",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": false,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-l-4",
+      "name": "repo-l-4",
+      "directoryName": "repo-l-4",
+      "assignedTrack": "Linguistics",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": false,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-l-5",
+      "name": "repo-l-5",
+      "directoryName": "repo-l-5",
+      "assignedTrack": "Linguistics",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": true,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-l-6",
+      "name": "repo-l-6",
+      "directoryName": "repo-l-6",
+      "assignedTrack": "Linguistics",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": true,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-l-7",
+      "name": "repo-l-7",
+      "directoryName": "repo-l-7",
+      "assignedTrack": "Linguistics",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": true,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-l-8",
+      "name": "repo-l-8",
+      "directoryName": "repo-l-8",
+      "assignedTrack": "Linguistics",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": true,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-l-dhatupatha-vec",
+      "name": "repo-l-9",
+      "directoryName": "repo-l-9",
+      "assignedTrack": "Linguistics",
+      "completionStage": "exploratory",
+      "passedChecksCount": 3,
+      "scorePercentage": 33,
+      "isHardeningEligible": false,
+      "disposition": "ARCHIVE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:00:00.000Z",
+      "promotedInBatch": false,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 9
+      }
+    },
+    {
+      "id": "proj-l-pie-laryngeal",
+      "name": "repo-l-10",
+      "directoryName": "repo-l-10",
+      "assignedTrack": "Linguistics",
+      "completionStage": "exploratory",
+      "passedChecksCount": 3,
+      "scorePercentage": 33,
+      "isHardeningEligible": false,
+      "disposition": "ARCHIVE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:00:00.000Z",
+      "promotedInBatch": false,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 9
+      }
+    },
+    {
+      "id": "proj-c-d50-spectro",
+      "name": "cie-d50-spectrophotometer-sim",
+      "directoryName": "cie-d50-spectrophotometer-sim",
+      "assignedTrack": "Color Physics",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:00:00.000Z",
+      "promotedInBatch": false,
+      "remediationPlan": "Integrate reference white point (X=96.422, Y=100.0, Z=82.521) into spectrophotometer engine.",
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-c-spectral-moments",
+      "name": "spectral-reflectance-moments",
+      "directoryName": "spectral-reflectance-moments",
+      "assignedTrack": "Color Physics",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:00:00.000Z",
+      "promotedInBatch": false,
+      "remediationPlan": "Integrate positive chromatic moments directly into core/color/moments.py.",
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-c-3",
+      "name": "repo-c-3",
+      "directoryName": "repo-c-3",
+      "assignedTrack": "Color Physics",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": false,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-c-4",
+      "name": "repo-c-4",
+      "directoryName": "repo-c-4",
+      "assignedTrack": "Color Physics",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": false,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-c-5",
+      "name": "repo-c-5",
+      "directoryName": "repo-c-5",
+      "assignedTrack": "Color Physics",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": false,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-c-6",
+      "name": "repo-c-6",
+      "directoryName": "repo-c-6",
+      "assignedTrack": "Color Physics",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": true,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-c-7",
+      "name": "repo-c-7",
+      "directoryName": "repo-c-7",
+      "assignedTrack": "Color Physics",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": true,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-c-8",
+      "name": "repo-c-8",
+      "directoryName": "repo-c-8",
+      "assignedTrack": "Color Physics",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": true,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-c-9",
+      "name": "repo-c-9",
+      "directoryName": "repo-c-9",
+      "assignedTrack": "Color Physics",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": true,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-c-bt2020-lut",
+      "name": "repo-c-10",
+      "directoryName": "repo-c-10",
+      "assignedTrack": "Color Physics",
+      "completionStage": "exploratory",
+      "passedChecksCount": 2,
+      "scorePercentage": 22,
+      "isHardeningEligible": false,
+      "disposition": "ARCHIVE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:00:00.000Z",
+      "promotedInBatch": false,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 6
+      }
+    },
+    {
+      "id": "proj-i-discrete-phase",
+      "name": "discrete-phase-invariants-w-engine",
+      "directoryName": "discrete-phase-invariants-w-engine",
+      "assignedTrack": "Invariants",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:00:00.000Z",
+      "promotedInBatch": false,
+      "remediationPlan": "Merge canonical phase constants into core/invariants/phase.py (W+=0.6354, W-=0.6378, W_inf=2/pi).",
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-i-stormer-verlet",
+      "name": "stormer-verlet-symplectic-integrator",
+      "directoryName": "stormer-verlet-symplectic-integrator",
+      "assignedTrack": "Invariants",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:00:00.000Z",
+      "promotedInBatch": false,
+      "remediationPlan": "Integrate symplectic Stormer-Verlet volume-preserving integrator into core/invariants/flow.py.",
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-i-poincare-recurrence",
+      "name": "poincare-recurrence-invariants",
+      "directoryName": "poincare-recurrence-invariants",
+      "assignedTrack": "Invariants",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/section_planes.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": false,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-i-4",
+      "name": "repo-i-4",
+      "directoryName": "repo-i-4",
+      "assignedTrack": "Invariants",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": false,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-i-5",
+      "name": "repo-i-5",
+      "directoryName": "repo-i-5",
+      "assignedTrack": "Invariants",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": false,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-i-6",
+      "name": "repo-i-6",
+      "directoryName": "repo-i-6",
+      "assignedTrack": "Invariants",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": true,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-i-7",
+      "name": "repo-i-7",
+      "directoryName": "repo-i-7",
+      "assignedTrack": "Invariants",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": true,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-i-8",
+      "name": "repo-i-8",
+      "directoryName": "repo-i-8",
+      "assignedTrack": "Invariants",
+      "completionStage": "hardened_production",
+      "passedChecksCount": 9,
+      "scorePercentage": 100,
+      "isHardeningEligible": true,
+      "disposition": "CONSOLIDATE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:52:04.940Z",
+      "promotedInBatch": true,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 27
+      }
+    },
+    {
+      "id": "proj-i-birkhoff-gustavson",
+      "name": "repo-i-9",
+      "directoryName": "repo-i-9",
+      "assignedTrack": "Invariants",
+      "completionStage": "exploratory",
+      "passedChecksCount": 3,
+      "scorePercentage": 33,
+      "isHardeningEligible": false,
+      "disposition": "ARCHIVE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:00:00.000Z",
+      "promotedInBatch": false,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 9
+      }
+    },
+    {
+      "id": "proj-i-noether-gauge",
+      "name": "repo-i-10",
+      "directoryName": "repo-i-10",
+      "assignedTrack": "Invariants",
+      "completionStage": "exploratory",
+      "passedChecksCount": 2,
+      "scorePercentage": 22,
+      "isHardeningEligible": false,
+      "disposition": "ARCHIVE",
+      "auditor": "Automated Ecosystem Auditor",
+      "configFilePath": "cfg/telemetry.yaml",
+      "updatedAt": "2026-10-12T16:00:00.000Z",
+      "promotedInBatch": false,
+      "remediationPlan": null,
+      "details": {
+        "actualFileCount": 6
+      }
+    }
+  ]
+}

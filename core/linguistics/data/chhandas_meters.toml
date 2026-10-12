@@ -1,0 +1,74 @@
+[[meters]]
+name = "Anuṣṭubh"
+type = "pattern"
+pada_patterns = [
+    ["XXXXLGGX"],
+    ["XXXXLGLX"],
+    ["XXXXLGGX"],
+    ["XXXXLGLX"],
+]
+
+[[meters]]
+name = "Viyoginī"
+type = "pattern"
+pada_patterns = [
+    ["LLGLLGLGLG"],
+    ["LLGGLLGLGLG"],
+    ["LLGLLGLGLG"],
+    ["LLGGLLGLGLG"],
+]
+
+[[meters]]
+name = "Toṭaka"
+type = "fixed"
+pattern = "LLGLLGLLGLLG"
+
+[[meters]]
+name = "Indravajrā"
+type = "fixed"
+pattern = "GGLGGLLGLGG"
+
+[[meters]]
+name = "Upendravajrā"
+type = "fixed"
+pattern = "LGLGGLLGLGG"
+
+[[meters]]
+name = "Śālinī"
+type = "fixed"
+pattern = "GGGGGLGGLGG"
+
+[[meters]]
+name = "Vaṃśastha"
+type = "fixed"
+pattern = "LGLGLLGLLGLG"
+
+[[meters]]
+name = "Bhujaṅgaprayāta"
+type = "fixed"
+pattern = "LGGLLGLLGLLG"
+
+[[meters]]
+name = "Vasantatilakā"
+type = "fixed"
+pattern = "GGLGLLLGLGLGG"
+
+[[meters]]
+name = "Mālinī"
+type = "fixed"
+pattern = "LLLLLLGGGLGGLGG"
+
+[[meters]]
+name = "Mandākrāntā"
+type = "fixed"
+pattern = "GGGGLLLLLGGLGGLGG"
+
+[[meters]]
+name = "Śikhariṇī"
+type = "fixed"
+pattern = "LGGGGGLLLLLLGGLLLG"
+
+[[meters]]
+name = "Śārdūlavikrīḍita"
+type = "fixed"
+pattern = "GGGLLGLGLLLGGLGGLG"
