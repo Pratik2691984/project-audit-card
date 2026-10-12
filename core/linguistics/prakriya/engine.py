@@ -6,6 +6,7 @@ Declarative vikaraṇa and morphosyntactic rule dispatcher covering:
   - Class 3 (Juhotyādi): śap -> ślu (2.4.75), dvitva (6.1.10), abhyāsa (6.1.4, 7.4.59, 7.4.62, 8.4.54)
   - Class 4 (Divādi): śyan (3.1.69) -> ya, 1.1.5 kniti ca blocks guṇa
   - Class 6 (Tudādi): śa (3.1.77) -> a, 1.2.4 apit + 1.1.5 blocks guṇa
+  - Class 7 (Rudhādi): śnam (3.1.78) mit-infix (1.1.47), 8.4.1 ṇatva, 6.4.111 al-lopa, 8.2.40 + 8.4.53
 """
 
 from dataclasses import dataclass
@@ -27,6 +28,7 @@ from core.linguistics.ast.sivasutras import expand_pratyahara
 
 # Sūtra Canonical Definitions
 SUTRA_1_1_5 = SutraRef("1.1.5", "kṅiti ca", SutraType.NIYAMA)
+SUTRA_1_1_47 = SutraRef("1.1.47", "midaco'ntyāt paraḥ", SutraType.PARIBHASA)
 SUTRA_1_2_4 = SutraRef("1.2.4", "sārvadhātukam apit", SutraType.ATIDESHA)
 SUTRA_1_3_1 = SutraRef("1.3.1", "bhūvādayo dhātavaḥ", SutraType.SAMJNA)
 SUTRA_1_3_3 = SutraRef("1.3.3", "halantyam", SutraType.SAMJNA)
@@ -37,6 +39,7 @@ SUTRA_2_4_75 = SutraRef("2.4.75", "juhotyādibhyaḥ śluḥ", SutraType.VIDHI)
 SUTRA_3_1_68 = SutraRef("3.1.68", "kartari śap", SutraType.VIDHI)
 SUTRA_3_1_69 = SutraRef("3.1.69", "divādibhyaḥ śyan", SutraType.VIDHI)
 SUTRA_3_1_77 = SutraRef("3.1.77", "tudādibhyaḥ śaḥ", SutraType.VIDHI)
+SUTRA_3_1_78 = SutraRef("3.1.78", "rudhādibhyaḥ śnam", SutraType.VIDHI)
 SUTRA_3_2_123 = SutraRef("3.2.123", "vartamāne laṭ", SutraType.VIDHI)
 SUTRA_3_4_78 = SutraRef("3.4.78", "tiptasjhi...", SutraType.VIDHI)
 SUTRA_6_1_4 = SutraRef("6.1.4", "pūrvo'bhyāsaḥ", SutraType.SAMJNA)
@@ -44,6 +47,7 @@ SUTRA_6_1_10 = SutraRef("6.1.10", "ślau", SutraType.VIDHI)
 SUTRA_6_1_77 = SutraRef("6.1.77", "iko yaṇaci", SutraType.VIDHI)
 SUTRA_6_1_78 = SutraRef("6.1.78", "eco'yavāyāvaḥ", SutraType.VIDHI)
 SUTRA_6_1_97 = SutraRef("6.1.97", "ato guṇe", SutraType.VIDHI)
+SUTRA_6_4_111 = SutraRef("6.4.111", "śnasorallopaḥ", SutraType.VIDHI)
 SUTRA_7_1_3 = SutraRef("7.1.3", "jho'ntaḥ", SutraType.VIDHI)
 SUTRA_7_1_4 = SutraRef("7.1.4", "adabhyastāt", SutraType.VIDHI)
 SUTRA_7_3_84 = SutraRef("7.3.84", "sārvadhātukārdhadhātukayoḥ", SutraType.VIDHI)
@@ -51,8 +55,11 @@ SUTRA_7_3_86 = SutraRef("7.3.86", "pugantalaghūpadhasya ca", SutraType.VIDHI)
 SUTRA_7_3_101 = SutraRef("7.3.101", "ato dīrgho yañi", SutraType.VIDHI)
 SUTRA_7_4_59 = SutraRef("7.4.59", "hrasvaḥ", SutraType.VIDHI)
 SUTRA_7_4_62 = SutraRef("7.4.62", "kuhoścuḥ", SutraType.VIDHI)
+SUTRA_8_2_40 = SutraRef("8.2.40", "jhaṣastathordho'dhaḥ", SutraType.VIDHI)
 SUTRA_8_2_66 = SutraRef("8.2.66", "sasajuṣo ruḥ", SutraType.VIDHI)
 SUTRA_8_3_15 = SutraRef("8.3.15", "kharavasānayor visarjanīyaḥ", SutraType.VIDHI)
+SUTRA_8_4_1 = SutraRef("8.4.1", "raṣābhyāṃ no ṇaḥ samānapade", SutraType.VIDHI)
+SUTRA_8_4_53 = SutraRef("8.4.53", "jhalāṁ jaś jhaśi", SutraType.VIDHI)
 SUTRA_8_4_54 = SutraRef("8.4.54", "abhyāse carca", SutraType.VIDHI)
 SUTRA_VARNAMELANA = SutraRef("varṇa-melana", "saṃyoga / padanirvṛtti", SutraType.VIDHI)
 
@@ -89,8 +96,8 @@ PARASMAIPADA_MAP = {
 }
 
 YAN_PRATYAHARA = set(expand_pratyahara("yañ"))
+HAL_CONSONANTS = set(expand_pratyahara("hal"))
 
-# Palatalization and de-aspiration mappings for abhyāsa
 KUHO_SCU_MAP = {"k": "c", "kh": "ch", "g": "j", "gh": "jh", "h": "jh"}
 CARCA_MAP = {
     "kh": "k", "gh": "g",
@@ -107,10 +114,11 @@ class VikaranaSpec:
     shuddha: str
     vidhi_sutra: SutraRef
     is_elided: bool = False
-    elision_type: Optional[str] = None  # "luk" or "ślu"
+    elision_type: Optional[str] = None
     elision_sutra: Optional[SutraRef] = None
     blocks_guna: bool = False
     guna_block_sutra: Optional[SutraRef] = None
+    is_mit_infix: bool = False
 
 
 VIKARANA_TABLE: Dict[Gana, VikaranaSpec] = {
@@ -144,22 +152,30 @@ VIKARANA_TABLE: Dict[Gana, VikaranaSpec] = {
         shuddha="ya",
         vidhi_sutra=SUTRA_3_1_69,
         blocks_guna=True,
-        guna_block_sutra=SUTRA_1_1_5,  # ṅit affix blocks guṇa
+        guna_block_sutra=SUTRA_1_1_5,
     ),
     Gana.TUDADI: VikaranaSpec(
         raw_pratyaya="śa",
         shuddha="a",
         vidhi_sutra=SUTRA_3_1_77,
         blocks_guna=True,
-        guna_block_sutra=SUTRA_1_2_4,  # sārvadhātukam apit -> ṅit-vat blocks guṇa
+        guna_block_sutra=SUTRA_1_2_4,
+    ),
+    Gana.RUDHADI: VikaranaSpec(
+        raw_pratyaya="śnam",
+        shuddha="na",
+        vidhi_sutra=SUTRA_3_1_78,
+        blocks_guna=True,
+        guna_block_sutra=SUTRA_1_2_4,
+        is_mit_infix=True,
     ),
 }
 
 
 def apply_it_lopa(pratyaya: str) -> str:
-    """Strips canonical it markers per 1.3.3 and 1.3.8."""
+    """Strips canonical it markers per 1.3.3 (final hal) and 1.3.8 (initial ś)."""
     res = pratyaya
-    if res.endswith("p") or res.endswith("n"):
+    if res and res[-1] in HAL_CONSONANTS:
         res = res[:-1]
     if res.startswith("ś"):
         res = res[1:]
@@ -170,6 +186,46 @@ def terminal_visarga_avasana(pada: str) -> str:
     """Converts terminal padānta -s to -ḥ in avasāna."""
     if pada.endswith("s"):
         return pada[:-1] + "ḥ"
+    return pada
+
+
+def insert_mit_infix(dhatu: str, infix: str, tree: DerivationTree) -> str:
+    """1.1.47 midaco'ntyāt paraḥ: mit augment attaches after the last vowel."""
+    vowels = {"a", "ā", "i", "ī", "u", "ū", "ṛ", "ṝ", "ḷ", "e", "ai", "o", "au"}
+    last_vowel = -1
+    for i, ch in enumerate(dhatu):
+        if ch in vowels:
+            last_vowel = i
+    if last_vowel == -1:
+        infixed = dhatu + infix
+    else:
+        infixed = dhatu[:last_vowel + 1] + infix + dhatu[last_vowel + 1:]
+    tree.record_step(
+        rule_applied=SUTRA_1_1_47,
+        left_operand=dhatu,
+        right_operand=infix,
+        output=infixed,
+        metadata={"stage": "mit_ac_antyat_parah"},
+    )
+    return infixed
+
+
+def retroflex_n_after_r(pada: str, tree: DerivationTree) -> str:
+    """8.4.1 raṣābhyāṃ no ṇaḥ samānapade: n after r/ṣ in same pada -> ṇ."""
+    r_idx = max(pada.rfind("r"), pada.rfind("ṣ"))
+    if r_idx == -1:
+        return pada
+    for i in range(r_idx + 1, len(pada)):
+        if pada[i] == "n":
+            result = pada[:i] + "ṇ" + pada[i + 1:]
+            tree.record_step(
+                rule_applied=SUTRA_8_4_1,
+                left_operand=pada,
+                right_operand="",
+                output=result,
+                metadata={"stage": "raṣabhyam_no_nah"},
+            )
+            return result
     return pada
 
 
@@ -404,7 +460,79 @@ def derive_lat_kartari(
                 final_form = visarga_form
             return tree
 
-    # 6. Overt Vikaraṇa Stripping (Classes 1, 4, 6)
+    # ----------------------------------------------------
+    # Branch D: Rudhādi Gaṇa (Class 7) Mit-Infix
+    # ----------------------------------------------------
+    if gana == Gana.RUDHADI:
+        vikarana = spec.shuddha  # "na"
+        tree.record_step(
+            rule_applied=SUTRA_1_3_9,
+            left_operand="śnam",
+            right_operand="",
+            output=f"{dhatu_upadesha} + {vikarana} + {tin_shuddha}",
+            metadata={"stage": "it_lopa_vikaraṇa"},
+        )
+
+        # Infix insertion via 1.1.47
+        if is_pit:
+            # Full infix 'na'
+            base = insert_mit_infix(dhatu_upadesha, vikarana, tree)
+            # 8.4.1 retroflexion on 'n' after 'r'
+            base = retroflex_n_after_r(base, tree)
+        else:
+            # 6.4.111 śnasorallopaḥ: elision of 'a' in 'na' before apit affixes -> 'n'
+            infix_elided = "n"
+            tree.record_step(
+                rule_applied=SUTRA_6_4_111,
+                left_operand=vikarana,
+                right_operand=tin_shuddha,
+                output=infix_elided,
+                metadata={"stage": "śnasor_allopaḥ"},
+            )
+            base = insert_mit_infix(dhatu_upadesha, infix_elided, tree)
+
+        # Consonant contact: dh + t -> ddh (8.2.40 + 8.4.53)
+        if base.endswith("dh") and tin_shuddha.startswith("t"):
+            tin_dha = "dh" + tin_shuddha[1:]
+            tree.record_step(
+                rule_applied=SUTRA_8_2_40,
+                left_operand=base,
+                right_operand=tin_shuddha,
+                output=f"{base} + {tin_dha}",
+                metadata={"stage": "jhaṣas_tathor_dhaḥ"},
+            )
+            base_d = base[:-1] + "d"
+            final_form = base_d + tin_dha
+            tree.record_step(
+                rule_applied=SUTRA_8_4_53,
+                left_operand=f"{base} + {tin_dha}",
+                right_operand="",
+                output=final_form,
+                metadata={"stage": "jhalāṁ_jaś_jhaśi"},
+            )
+        else:
+            final_form = base + tin_shuddha
+            tree.record_step(
+                rule_applied=SUTRA_VARNAMELANA,
+                left_operand=base,
+                right_operand=tin_shuddha,
+                output=final_form,
+                metadata={"stage": "padanirvṛtti"},
+            )
+
+        if final_form.endswith("s"):
+            visarga_form = terminal_visarga_avasana(final_form)
+            tree.record_step(
+                rule_applied=SUTRA_8_3_15,
+                left_operand=final_form,
+                right_operand="",
+                output=visarga_form,
+                metadata={"stage": "avasāne_visargaḥ"},
+            )
+            final_form = visarga_form
+        return tree
+
+    # 6. Overt Suffix Stripping (Classes 1, 4, 6)
     vikarana = spec.shuddha
     tree.record_step(
         rule_applied=SUTRA_1_3_9,
@@ -425,7 +553,6 @@ def derive_lat_kartari(
         )
         base_anga = f"{dhatu_upadesha}{vikarana}"
     else:
-        # Class 1: guṇa triggered on bhū
         if dhatu_upadesha == "bhū":
             dhatu_guna = "bho"
             tree.record_step(

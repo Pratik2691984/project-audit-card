@@ -32,7 +32,7 @@ class TestPrakriyaEngine(unittest.TestCase):
                 self.assertEqual(
                     tree.final_output,
                     expected_form,
-                    f"Mismatch at purusha={purusha}, vacana={vacana}"
+                    f"Mismatch at purusha={purusha}, vacana={vacana}",
                 )
 
     def test_jhonta_and_ato_gune_provenance(self):
@@ -118,6 +118,30 @@ class TestPrakriyaEngine(unittest.TestCase):
         tree_vis = derive_lat_kartari("viś", gana=Gana.TUDADI, purusha=3, vacana=1)
         self.assertEqual(tree_vis.final_output, "viśati")
         self.assertNotEqual(tree_vis.final_output, "veśati")
+
+    def test_rudh_rudhadi_cells(self):
+        """
+        Verify Rudhādi (Class 7) mit-infix (1.1.47), ṇatva (8.4.1),
+        jhaṣas tathor dho'dhaḥ (8.2.40), and jhalāṁ jaś jhaśi (8.4.53):
+          3sg: rudh + tip -> ruṇaddhi
+          3du: rudh + tas -> runddhaḥ (via 6.4.111 al-lopa)
+        """
+        tree_3sg = derive_lat_kartari("rudh", gana=Gana.RUDHADI, purusha=3, vacana=1)
+        self.assertEqual(tree_3sg.final_output, "ruṇaddhi")
+        applied_3sg = [step.rule_applied.number for step in tree_3sg.steps]
+        self.assertIn("3.1.78", applied_3sg)
+        self.assertIn("1.1.47", applied_3sg)
+        self.assertIn("8.4.1", applied_3sg)
+        self.assertIn("8.2.40", applied_3sg)
+        self.assertIn("8.4.53", applied_3sg)
+
+        tree_3du = derive_lat_kartari("rudh", gana=Gana.RUDHADI, purusha=3, vacana=2)
+        self.assertEqual(tree_3du.final_output, "runddhaḥ")
+        applied_3du = [step.rule_applied.number for step in tree_3du.steps]
+        self.assertIn("6.4.111", applied_3du)
+        self.assertIn("8.2.40", applied_3du)
+        self.assertIn("8.4.53", applied_3du)
+        self.assertIn("8.3.15", applied_3du)
 
 
 if __name__ == "__main__":
