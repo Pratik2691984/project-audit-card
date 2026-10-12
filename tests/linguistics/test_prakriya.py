@@ -53,6 +53,34 @@ class TestPrakriyaEngine(unittest.TestCase):
             applied_sutras = [step.rule_applied.number for step in tree.steps]
             self.assertIn("7.3.101", applied_sutras)
 
+    def test_ad_lat_adadi_cells(self):
+        """
+        Verify Adādi (Class 2) luk-elision of śap (2.4.72) and khari ca (8.4.55):
+          3sg: ad + ti   -> at + ti  -> atti
+          3du: ad + tas  -> at + tas -> attaḥ
+          3pl: ad + anti -> adanti
+        """
+        # 3sg: atti
+        tree_3sg = derive_lat_kartari("ad", gana=Gana.ADADI, purusha=3, vacana=1)
+        self.assertEqual(tree_3sg.final_output, "atti")
+        applied_3sg = [step.rule_applied.number for step in tree_3sg.steps]
+        self.assertIn("2.4.72", applied_3sg)
+        self.assertIn("8.4.55", applied_3sg)
+
+        # 3du: attaḥ
+        tree_3du = derive_lat_kartari("ad", gana=Gana.ADADI, purusha=3, vacana=2)
+        self.assertEqual(tree_3du.final_output, "attaḥ")
+        applied_3du = [step.rule_applied.number for step in tree_3du.steps]
+        self.assertIn("2.4.72", applied_3du)
+        self.assertIn("8.4.55", applied_3du)
+        self.assertIn("8.3.15", applied_3du)
+
+        # 3pl: adanti
+        tree_3pl = derive_lat_kartari("ad", gana=Gana.ADADI, purusha=3, vacana=3)
+        self.assertEqual(tree_3pl.final_output, "adanti")
+        applied_3pl = [step.rule_applied.number for step in tree_3pl.steps]
+        self.assertIn("2.4.72", applied_3pl)
+
 
 if __name__ == "__main__":
     unittest.main()

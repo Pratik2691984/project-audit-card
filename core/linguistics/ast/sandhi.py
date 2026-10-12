@@ -3,7 +3,7 @@ sandhi.py - Pāṇinian Sandhi Engine
 Covers:
   - Ac-Sandhi (6.1.101, 6.1.109, 6.1.88, 6.1.87, 6.1.78, 6.1.77, 8.3.19)
   - 6.1.84 ekaḥ pūrvaparayoḥ (adhikāra single substitution provenance)
-  - Hal-Sandhi (8.4.40 stoḥ ścunā ścuḥ, 8.4.41 ṣṭunā ṣṭuḥ)
+  - Hal-Sandhi (8.4.55 khari ca, 8.4.40 stoḥ ścunā ścuḥ, 8.4.41 ṣṭunā ṣṭuḥ)
   - Visarga-Sandhi (8.2.66 sasajuṣo ruḥ, 6.1.113 ato ror aplutād aplute,
                     6.1.114 haśi ca, 8.3.17 bhobhagoaghopūrvasya yo'śi)
 """
@@ -31,6 +31,7 @@ SUTRA_8_3_17 = SutraRef("8.3.17", "bhobhagoaghopūrvasya yo'śi", SutraType.VIDH
 SUTRA_8_3_19 = SutraRef("8.3.19", "lopaḥ śākalyasya", SutraType.VIDHI)
 SUTRA_8_4_40 = SutraRef("8.4.40", "stoḥ ścunā ścuḥ", SutraType.VIDHI)
 SUTRA_8_4_41 = SutraRef("8.4.41", "ṣṭunā ṣṭuḥ", SutraType.VIDHI)
+SUTRA_8_4_55 = SutraRef("8.4.55", "khari ca", SutraType.VIDHI)
 SUTRA_1_1_51 = SutraRef("1.1.51", "uraṇ raparaḥ", SutraType.PARIBHASA)
 
 # Phoneme mappings
@@ -68,6 +69,20 @@ SCU_TRIGGER = {"ś", "c", "ch", "j", "jh", "ñ"}
 
 SHTU_REPLACE = {"s": "ṣ", "t": "ṭ", "th": "ṭh", "d": "ḍ", "dh": "ḍh", "n": "ṇ"}
 SHTU_TRIGGER = {"ṣ", "ṭ", "ṭh", "ḍ", "ḍh", "ṇ"}
+
+# 8.4.55 khari ca sets
+KHAR_ALL = {
+    "kh", "ph", "ch", "ṭh", "th",
+    "c", "ṭ", "t", "k", "p",
+    "ś", "ṣ", "s"
+}
+JHAL_TO_CAR_MAP = {
+    "k": "k", "kh": "k", "g": "k", "gh": "k",
+    "c": "c", "ch": "c", "j": "c", "jh": "c",
+    "ṭ": "ṭ", "ṭh": "ṭ", "ḍ": "ṭ", "ḍh": "ṭ",
+    "t": "t", "th": "t", "d": "t", "dh": "t",
+    "p": "p", "ph": "p", "b": "p", "bh": "p",
+}
 
 
 def extract_final_vowel(s: str) -> Tuple[str, str]:
@@ -281,18 +296,47 @@ def apply_vowel_sandhi(left: str, right: str, is_padanta: bool = True, tree: Opt
 
 
 # ---------------------------------------------------------------------------
-# Hal-Sandhi: 8.4.40 Ścutva & 8.4.41 Ṣṭutva
+# Hal-Sandhi: 8.4.55 Khari Ca, 8.4.40 Ścutva & 8.4.41 Ṣṭutva
 # ---------------------------------------------------------------------------
+
+def apply_khari_ca(left: str, right: str, tree: Optional[DerivationTree] = None) -> Optional[Tuple[str, SutraRef]]:
+    """
+    8.4.55: khari ca
+    Replaces a trailing jhal stop with its car counterpart when followed by a khar sound.
+    Example: ad + ti -> at + ti -> atti
+    """
+    if not left or not right:
+        return None
+
+    for ph_len in (2, 1):
+        if len(left) >= ph_len:
+            tail = left[-ph_len:]
+            if tail in JHAL_TO_CAR_MAP:
+                first_right = right[:2] if len(right) >= 2 and right[:2] in KHAR_ALL else right[0]
+                if first_right in KHAR_ALL:
+                    stem = left[:-ph_len]
+                    car_sub = JHAL_TO_CAR_MAP[tail]
+                    out = stem + car_sub + right
+                    if tree:
+                        tree.record_step(
+                            rule_applied=SUTRA_8_4_55,
+                            left_operand=left,
+                            right_operand=right,
+                            output=out,
+                            metadata={"stage": "khari_ca_caritva"}
+                        )
+                    return out, SUTRA_8_4_55
+    return None
+
 
 def apply_stoh_scuna_scuh(left: str, right: str, tree: Optional[DerivationTree] = None) -> Optional[Tuple[str, SutraRef]]:
     """8.4.40: stoḥ ścunā ścuḥ (s/tu replaced by ś/cu when in contact with ś/cu)."""
     if not left or not right:
         return None
 
-    # Check forward contact: left ends in 'stu' and right starts with 'ścu'
+    # Forward contact
     for ph in STU_PHONEMES:
         if left.endswith(ph):
-            # check trigger on right
             first_right = right[:2] if len(right) >= 2 and right[:2] in ("ch", "jh") else right[0]
             if first_right in SCU_TRIGGER:
                 stem = left[:-len(ph)]
@@ -302,7 +346,7 @@ def apply_stoh_scuna_scuh(left: str, right: str, tree: Optional[DerivationTree] 
                     tree.record_step(rule_applied=SUTRA_8_4_40, left_operand=left, right_operand=right, output=out)
                 return out, SUTRA_8_4_40
 
-    # Check backward contact: left ends in 'ścu' and right starts with 'stu'
+    # Backward contact
     for trigger in ("ch", "jh", "ś", "c", "j", "ñ"):
         if left.endswith(trigger):
             for ph in STU_PHONEMES:
@@ -347,6 +391,10 @@ def apply_stuna_stuh(left: str, right: str, tree: Optional[DerivationTree] = Non
 
 def apply_hal_sandhi(left: str, right: str, tree: Optional[DerivationTree] = None) -> str:
     """Consonant sandhi dispatcher."""
+    res_khari = apply_khari_ca(left, right, tree=tree)
+    if res_khari:
+        return res_khari[0]
+
     res_scu = apply_stoh_scuna_scuh(left, right, tree=tree)
     if res_scu:
         return res_scu[0]
@@ -373,11 +421,9 @@ def apply_visarga_sandhi(left: str, right: str, is_padanta: bool = True, tree: O
     if not left or not right:
         return left + right
 
-    # Normalize final s or visarga ḥ to padānta 'ru' via 8.2.66
     if not (left.endswith("ḥ") or left.endswith("s")):
         return left + right
 
-    # Base stem prior to terminal visarga/s
     stem = left[:-1]
     if tree:
         tree.record_step(
@@ -390,7 +436,7 @@ def apply_visarga_sandhi(left: str, right: str, is_padanta: bool = True, tree: O
 
     first_right = right[0]
 
-    # Rule 6.1.113: ato ror aplutād aplute (short a + ru + short a -> o')
+    # Rule 6.1.113: ato ror aplutād aplute
     if stem.endswith("a") and not stem.endswith("ā") and first_right == "a":
         base = stem[:-1] + "o"
         out = base + "'" + right[1:]
@@ -398,7 +444,7 @@ def apply_visarga_sandhi(left: str, right: str, is_padanta: bool = True, tree: O
             tree.record_step(rule_applied=SUTRA_6_1_113, left_operand=stem + "r", right_operand=right, output=out)
         return out
 
-    # Rule 6.1.114: haśi ca (short a + ru + voiced consonant haś -> o + consonant)
+    # Rule 6.1.114: haśi ca
     if stem.endswith("a") and not stem.endswith("ā") and first_right in HASH_VOICED_CONS:
         base = stem[:-1] + "o"
         out = base + " " + right
@@ -406,14 +452,14 @@ def apply_visarga_sandhi(left: str, right: str, is_padanta: bool = True, tree: O
             tree.record_step(rule_applied=SUTRA_6_1_114, left_operand=stem + "r", right_operand=right, output=out)
         return out
 
-    # Rule 8.3.17: bhobhagoaghopūrvasya yo'śi (bho/bhago/agho or ā + ru + aś -> y -> lopa)
+    # Rule 8.3.17: bhobhagoaghopūrvasya yo'śi
     if (stem in ("bho", "bhago", "agho") or stem.endswith("ā")) and first_right in AS_ALL:
         out = stem + " " + right
         if tree:
             tree.record_step(rule_applied=SUTRA_8_3_17, left_operand=stem + "r", right_operand=right, output=out)
         return out
 
-    # Default fallback: ru remains as 'r' before vowels
+    # Fallback before vowels
     if first_right in AC_ALL:
         out = stem + "r" + right
         return out
@@ -431,3 +477,4 @@ apply_ayavayavah = apply_ecoyavayavah
 apply_sakalyalopa = apply_lopah_sakalyasya
 apply_scutva = apply_stoh_scuna_scuh
 apply_shtutva = apply_stuna_stuh
+apply_kharica = apply_khari_ca
