@@ -5,18 +5,21 @@ test_ast_sandhi.py - Test suite for Pāṇinian Ac-Sandhi rules
 import unittest
 from core.linguistics.ast.sandhi import (
     apply_vowel_sandhi,
+    apply_vowel_sandhi_variants,
     apply_iko_yanaci,
     apply_ad_gunah,
     apply_vrddhir_eci,
     apply_akah_savarne_dirghah,
     apply_ecoyavayavah,
     apply_enah_padantad_ati,
+    apply_lopah_sakalyasya,
     SUTRA_6_1_77,
     SUTRA_6_1_78,
     SUTRA_6_1_87,
     SUTRA_6_1_88,
     SUTRA_6_1_101,
     SUTRA_6_1_109,
+    SUTRA_8_3_19,
 )
 
 
@@ -99,60 +102,75 @@ class TestAstSandhi(unittest.TestCase):
 
     # --- 6.1.78: Eco'yavāyāvaḥ Tests ---
     def test_ecoyavayavah_e_to_ay(self):
-        # hare + e -> haraye
         res, sutra = apply_ecoyavayavah("hare", "e")
         self.assertEqual(res, "haraye")
         self.assertEqual(sutra.number, "6.1.78")
 
     def test_ecoyavayavah_o_to_av(self):
-        # bho + anam -> bhavanam
         res, sutra = apply_ecoyavayavah("bho", "anam")
         self.assertEqual(res, "bhavanam")
         self.assertEqual(sutra.number, "6.1.78")
 
     def test_ecoyavayavah_ai_to_aay(self):
-        # nai + aka -> nāyaka
         res, sutra = apply_ecoyavayavah("nai", "aka")
         self.assertEqual(res, "nāyaka")
         self.assertEqual(sutra.number, "6.1.78")
 
     def test_ecoyavayavah_au_to_aav(self):
-        # pau + aka -> pāvaka
         res, sutra = apply_ecoyavayavah("pau", "aka")
         self.assertEqual(res, "pāvaka")
         self.assertEqual(sutra.number, "6.1.78")
 
     # --- 6.1.109: Eṅaḥ Padāntād Ati (Pūrvarūpa) Tests ---
     def test_enah_padantad_ati_e(self):
-        # hare + atra -> hare'tra
         res, sutra = apply_enah_padantad_ati("hare", "atra", is_padanta=True)
         self.assertEqual(res, "hare'tra")
         self.assertEqual(sutra.number, "6.1.109")
 
     def test_enah_padantad_ati_o(self):
-        # prabho + atra -> prabho'tra
         res, sutra = apply_enah_padantad_ati("prabho", "atra", is_padanta=True)
         self.assertEqual(res, "prabho'tra")
         self.assertEqual(sutra.number, "6.1.109")
 
     def test_enah_padantad_ati_rejected_when_not_padanta(self):
-        # Internal morpheme boundary should NOT trigger 6.1.109
         res = apply_enah_padantad_ati("bho", "anam", is_padanta=False)
         self.assertIsNone(res)
 
     def test_enah_padantad_ati_rejected_when_long_a(self):
-        # te + āgatāḥ -> 6.1.109 requires short 'at' (a), not 'āt' (ā)
         res = apply_enah_padantad_ati("te", "āgatāḥ", is_padanta=True)
         self.assertIsNone(res)
 
+    # --- 8.3.19: Lopaḥ Śākalyasya Tests ---
+    def test_lopah_sakalyasya_y_elision(self):
+        # vane + āste -> vanay + āste -> vana āste (8.3.19)
+        res, sutra = apply_lopah_sakalyasya("vanay", "āste", is_padanta=True)
+        self.assertEqual(res, "vana āste")
+        self.assertEqual(sutra.number, "8.3.19")
+
+    def test_lopah_sakalyasya_v_elision(self):
+        # ubhau + atra -> ubhāv + atra -> ubhā atra (8.3.19)
+        res, sutra = apply_lopah_sakalyasya("ubhāv", "atra", is_padanta=True)
+        self.assertEqual(res, "ubhā atra")
+        self.assertEqual(sutra.number, "8.3.19")
+
+    def test_lopah_sakalyasya_dual_variants(self):
+        # vane + āste produces both [vana āste, vanayāste]
+        variants = apply_vowel_sandhi_variants("vane", "āste", is_padanta=True)
+        self.assertIn("vana āste", variants)
+        self.assertIn("vanayāste", variants)
+
+    def test_lopah_sakalyasya_asiddhatva_no_secondary_sandhi(self):
+        # In 'vana āste', a + ā must NOT combine to vanāste via 6.1.101 due to pūrvatrāsiddham
+        res = apply_vowel_sandhi("vane", "āste", is_padanta=True)
+        self.assertEqual(res, "vana āste")
+        self.assertNotEqual(res, "vanāste")
+
     # --- Precedence & Dispatcher Tests ---
     def test_precedence_purvarupa_over_ecoyavayavah(self):
-        # hare + atra (padānta) -> hare'tra (MUST NOT produce harayatra via 6.1.78)
         res = apply_vowel_sandhi("hare", "atra", is_padanta=True)
         self.assertEqual(res, "hare'tra")
 
     def test_fallback_ecoyavayavah_when_not_padanta(self):
-        # When not padānta, e + a -> ay + a
         res = apply_vowel_sandhi("hare", "atra", is_padanta=False)
         self.assertEqual(res, "harayatra")
 
