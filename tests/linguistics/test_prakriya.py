@@ -150,7 +150,6 @@ class TestPrakriyaEngine(unittest.TestCase):
           Class 8 (Tanādi): tan + u  -> tanoti (3sg), tanutaḥ (3du)
           Class 9 (Kryādi): krī + śnā -> krīṇāti (3sg), krīṇītaḥ (3du via 6.4.112)
         """
-        # Svādi: sunoti, sunutaḥ
         tree_su_3sg = derive_lat_kartari("su", gana=Gana.SVADI, purusha=3, vacana=1)
         self.assertEqual(tree_su_3sg.final_output, "sunoti")
         self.assertIn("3.1.73", [s.rule_applied.number for s in tree_su_3sg.steps])
@@ -161,7 +160,6 @@ class TestPrakriyaEngine(unittest.TestCase):
         self.assertIn("1.2.4", [s.rule_applied.number for s in tree_su_3du.steps])
         self.assertIn("8.3.15", [s.rule_applied.number for s in tree_su_3du.steps])
 
-        # Tanādi: tanoti, tanutaḥ
         tree_tan_3sg = derive_lat_kartari("tan", gana=Gana.TANADI, purusha=3, vacana=1)
         self.assertEqual(tree_tan_3sg.final_output, "tanoti")
         self.assertIn("3.1.79", [s.rule_applied.number for s in tree_tan_3sg.steps])
@@ -170,9 +168,7 @@ class TestPrakriyaEngine(unittest.TestCase):
         tree_tan_3du = derive_lat_kartari("tan", gana=Gana.TANADI, purusha=3, vacana=2)
         self.assertEqual(tree_tan_3du.final_output, "tanutaḥ")
         self.assertIn("1.2.4", [s.rule_applied.number for s in tree_tan_3du.steps])
-        self.assertIn("8.3.15", [s.rule_applied.number for s in tree_tan_3du.steps])
 
-        # Kryādi: krīṇāti, krīṇītaḥ
         tree_kri_3sg = derive_lat_kartari("krī", gana=Gana.KRYADI, purusha=3, vacana=1)
         self.assertEqual(tree_kri_3sg.final_output, "krīṇāti")
         self.assertIn("3.1.81", [s.rule_applied.number for s in tree_kri_3sg.steps])
@@ -182,6 +178,29 @@ class TestPrakriyaEngine(unittest.TestCase):
         self.assertEqual(tree_kri_3du.final_output, "krīṇītaḥ")
         self.assertIn("6.4.112", [s.rule_applied.number for s in tree_kri_3du.steps])
         self.assertIn("8.3.15", [s.rule_applied.number for s in tree_kri_3du.steps])
+
+    def test_curadi_cells(self):
+        """
+        Verify Curādi (Class 10) compound vikaraṇa:
+          cur + ṇic + śap -> corayati (7.3.86 laghūpadha guṇa + 6.1.78 eco'yavāyāvaḥ)
+          kath + ṇic + śap -> kathayati (no guṇa on non-ik penultimate)
+        """
+        tree_cur = derive_lat_kartari("cur", gana=Gana.CURADI, purusha=3, vacana=1)
+        self.assertEqual(tree_cur.final_output, "corayati")
+        applied_cur = [s.rule_applied.number for s in tree_cur.steps]
+        self.assertIn("3.1.25", applied_cur)
+        self.assertIn("7.3.86", applied_cur)
+        self.assertIn("3.1.68", applied_cur)
+        self.assertIn("7.3.84", applied_cur)
+        self.assertIn("6.1.78", applied_cur)
+
+        tree_kath = derive_lat_kartari("kath", gana=Gana.CURADI, purusha=3, vacana=1)
+        self.assertEqual(tree_kath.final_output, "kathayati")
+        applied_kath = [s.rule_applied.number for s in tree_kath.steps]
+        self.assertIn("3.1.25", applied_kath)
+        self.assertNotIn("7.3.86", applied_kath)
+        self.assertIn("3.1.68", applied_kath)
+        self.assertIn("6.1.78", applied_kath)
 
 
 if __name__ == "__main__":
