@@ -5,8 +5,11 @@ Declarative vikaraṇa and morphosyntactic rule dispatcher covering:
   - Class 2 (Adādi): śap (3.1.68) -> luk (2.4.72), consonant sandhi (8.4.55)
   - Class 3 (Juhotyādi): śap -> ślu (2.4.75), dvitva (6.1.10), abhyāsa (6.1.4, 7.4.59, 7.4.62, 8.4.54)
   - Class 4 (Divādi): śyan (3.1.69) -> ya, 1.1.5 kniti ca blocks guṇa
+  - Class 5 (Svādi): śnu (3.1.73) -> nu, vikaraṇa guṇa on pit (7.3.84)
   - Class 6 (Tudādi): śa (3.1.77) -> a, 1.2.4 apit + 1.1.5 blocks guṇa
   - Class 7 (Rudhādi): śnam (3.1.78) mit-infix (1.1.47), 8.4.1 ṇatva, 6.4.111 al-lopa, 8.2.40 + 8.4.53
+  - Class 8 (Tanādi): u (3.1.79) -> u, vikaraṇa guṇa on pit (7.3.84)
+  - Class 9 (Kryādi): śnā (3.1.81) -> nā, 8.4.1 ṇatva, 6.4.112 ī-ādeśa on apit
 """
 
 from dataclasses import dataclass
@@ -38,8 +41,11 @@ SUTRA_2_4_72 = SutraRef("2.4.72", "adiprabhṛtibhyaḥ śapaḥ", SutraType.VID
 SUTRA_2_4_75 = SutraRef("2.4.75", "juhotyādibhyaḥ śluḥ", SutraType.VIDHI)
 SUTRA_3_1_68 = SutraRef("3.1.68", "kartari śap", SutraType.VIDHI)
 SUTRA_3_1_69 = SutraRef("3.1.69", "divādibhyaḥ śyan", SutraType.VIDHI)
+SUTRA_3_1_73 = SutraRef("3.1.73", "svādibhyaḥ śnuḥ", SutraType.VIDHI)
 SUTRA_3_1_77 = SutraRef("3.1.77", "tudādibhyaḥ śaḥ", SutraType.VIDHI)
 SUTRA_3_1_78 = SutraRef("3.1.78", "rudhādibhyaḥ śnam", SutraType.VIDHI)
+SUTRA_3_1_79 = SutraRef("3.1.79", "tanādikṛñbhya uḥ", SutraType.VIDHI)
+SUTRA_3_1_81 = SutraRef("3.1.81", "kryādibhyaḥ śnā", SutraType.VIDHI)
 SUTRA_3_2_123 = SutraRef("3.2.123", "vartamāne laṭ", SutraType.VIDHI)
 SUTRA_3_4_78 = SutraRef("3.4.78", "tiptasjhi...", SutraType.VIDHI)
 SUTRA_6_1_4 = SutraRef("6.1.4", "pūrvo'bhyāsaḥ", SutraType.SAMJNA)
@@ -48,6 +54,7 @@ SUTRA_6_1_77 = SutraRef("6.1.77", "iko yaṇaci", SutraType.VIDHI)
 SUTRA_6_1_78 = SutraRef("6.1.78", "eco'yavāyāvaḥ", SutraType.VIDHI)
 SUTRA_6_1_97 = SutraRef("6.1.97", "ato guṇe", SutraType.VIDHI)
 SUTRA_6_4_111 = SutraRef("6.4.111", "śnasorallopaḥ", SutraType.VIDHI)
+SUTRA_6_4_112 = SutraRef("6.4.112", "śnābhyastayostātaḥ", SutraType.VIDHI)
 SUTRA_7_1_3 = SutraRef("7.1.3", "jho'ntaḥ", SutraType.VIDHI)
 SUTRA_7_1_4 = SutraRef("7.1.4", "adabhyastāt", SutraType.VIDHI)
 SUTRA_7_3_84 = SutraRef("7.3.84", "sārvadhātukārdhadhātukayoḥ", SutraType.VIDHI)
@@ -153,6 +160,12 @@ VIKARANA_TABLE: Dict[Gana, VikaranaSpec] = {
         blocks_guna=True,
         guna_block_sutra=SUTRA_1_1_5,
     ),
+    Gana.SVADI: VikaranaSpec(
+        raw_pratyaya="śnu",
+        shuddha="nu",
+        vidhi_sutra=SUTRA_3_1_73,
+        blocks_guna=False,
+    ),
     Gana.TUDADI: VikaranaSpec(
         raw_pratyaya="śa",
         shuddha="a",
@@ -167,6 +180,19 @@ VIKARANA_TABLE: Dict[Gana, VikaranaSpec] = {
         blocks_guna=True,
         guna_block_sutra=SUTRA_1_2_4,
         is_mit_infix=True,
+    ),
+    Gana.TANADI: VikaranaSpec(
+        raw_pratyaya="u",
+        shuddha="u",
+        vidhi_sutra=SUTRA_3_1_79,
+        blocks_guna=False,
+    ),
+    Gana.KRYADI: VikaranaSpec(
+        raw_pratyaya="śnā",
+        shuddha="nā",
+        vidhi_sutra=SUTRA_3_1_81,
+        blocks_guna=True,
+        guna_block_sutra=SUTRA_1_2_4,
     ),
 }
 
@@ -211,7 +237,7 @@ def insert_mit_infix(dhatu: str, infix: str, tree: DerivationTree) -> str:
 
 def retroflex_n_after_r(pada: str, tree: DerivationTree) -> str:
     """8.4.1 raṣābhyāṃ no ṇaḥ samānapade: n after r/ṣ in same pada -> ṇ."""
-    r_idx = max(pada.rfind("r"), pada.rfind("ṣ"))
+    r_idx = max(pada.rfind("r"), pada.rfind("ṣ"), pada.rfind("ṝ"), pada.rfind("ṛ"))
     if r_idx == -1:
         return pada
     for i in range(r_idx + 1, len(pada)):
@@ -486,7 +512,6 @@ def derive_lat_kartari(
             )
             base = insert_mit_infix(dhatu_upadesha, infix_elided, tree)
 
-        # Consonant contact: dh + t -> ddh (8.2.40 + 8.4.53)
         if base.endswith("dh") and tin_shuddha.startswith("t"):
             tin_dha = "dh" + tin_shuddha[1:]
             tree.record_step(
@@ -496,7 +521,7 @@ def derive_lat_kartari(
                 output=f"{base} + {tin_dha}",
                 metadata={"stage": "jhaṣas_tathor_dhaḥ"},
             )
-            base_d = base[:-2] + "d"  # replace trailing 'dh' with 'd'
+            base_d = base[:-2] + "d"
             final_form = base_d + tin_dha
             tree.record_step(
                 rule_applied=SUTRA_8_4_53,
@@ -514,6 +539,105 @@ def derive_lat_kartari(
                 output=final_form,
                 metadata={"stage": "padanirvṛtti"},
             )
+
+        if final_form.endswith("s"):
+            visarga_form = terminal_visarga_avasana(final_form)
+            tree.record_step(
+                rule_applied=SUTRA_8_3_15,
+                left_operand=final_form,
+                right_operand="",
+                output=visarga_form,
+                metadata={"stage": "avasāne_visargaḥ"},
+            )
+            final_form = visarga_form
+        return tree
+
+    # ----------------------------------------------------
+    # Branch E: Svādi (5), Tanādi (8), Kryādi (9)
+    # ----------------------------------------------------
+    if gana in (Gana.SVADI, Gana.TANADI, Gana.KRYADI):
+        vikarana = spec.shuddha
+        tree.record_step(
+            rule_applied=SUTRA_1_3_9,
+            left_operand=spec.raw_pratyaya,
+            right_operand="",
+            output=f"{dhatu_upadesha} + {vikarana} + {tin_shuddha}",
+            metadata={"stage": "it_lopa_vikaraṇa"},
+        )
+
+        # Class 5: su + nu -> sunoti / sunutaḥ
+        if gana == Gana.SVADI:
+            if is_pit:
+                # 7.3.84 guṇa on u of nu -> no
+                vik_guna = "no"
+                tree.record_step(
+                    rule_applied=SUTRA_7_3_84,
+                    left_operand=vikarana,
+                    right_operand=tin_shuddha,
+                    output=f"{dhatu_upadesha} + {vik_guna} + {tin_shuddha}",
+                    metadata={"stage": "vikaraṇa_guṇa"},
+                )
+                final_form = f"{dhatu_upadesha}{vik_guna}{tin_shuddha}"
+            else:
+                tree.record_step(
+                    rule_applied=SUTRA_1_2_4,
+                    left_operand=vikarana,
+                    right_operand=tin_shuddha,
+                    output=f"{dhatu_upadesha} + {vikarana} + {tin_shuddha}",
+                    metadata={"stage": "apit_aguṇa"},
+                )
+                final_form = f"{dhatu_upadesha}{vikarana}{tin_shuddha}"
+
+        # Class 8: tan + u -> tanoti / tanutaḥ
+        elif gana == Gana.TANADI:
+            if is_pit:
+                # 7.3.84 guṇa on u -> o
+                vik_guna = "o"
+                tree.record_step(
+                    rule_applied=SUTRA_7_3_84,
+                    left_operand=vikarana,
+                    right_operand=tin_shuddha,
+                    output=f"{dhatu_upadesha} + {vik_guna} + {tin_shuddha}",
+                    metadata={"stage": "vikaraṇa_guṇa"},
+                )
+                final_form = f"{dhatu_upadesha}{vik_guna}{tin_shuddha}"
+            else:
+                tree.record_step(
+                    rule_applied=SUTRA_1_2_4,
+                    left_operand=vikarana,
+                    right_operand=tin_shuddha,
+                    output=f"{dhatu_upadesha} + {vikarana} + {tin_shuddha}",
+                    metadata={"stage": "apit_aguṇa"},
+                )
+                final_form = f"{dhatu_upadesha}{vikarana}{tin_shuddha}"
+
+        # Class 9: krī + śnā -> krīṇāti / krīṇītaḥ
+        elif gana == Gana.KRYADI:
+            # 8.4.1 retroflexion on nā -> ṇā
+            vik_retro = retroflex_n_after_r(f"{dhatu_upadesha}{vikarana}", tree)
+            vik_affix = vik_retro[len(dhatu_upadesha):]
+
+            if is_pit:
+                final_form = f"{dhatu_upadesha}{vik_affix}{tin_shuddha}"
+            else:
+                # 6.4.112 śnābhyastayostātaḥ: nā -> nī / ṇī before weak consonant affixes
+                vik_ii = vik_affix[:-1] + "ī"
+                tree.record_step(
+                    rule_applied=SUTRA_6_4_112,
+                    left_operand=vik_affix,
+                    right_operand=tin_shuddha,
+                    output=f"{dhatu_upadesha} + {vik_ii} + {tin_shuddha}",
+                    metadata={"stage": "śnā_īttva"},
+                )
+                final_form = f"{dhatu_upadesha}{vik_ii}{tin_shuddha}"
+
+        tree.record_step(
+            rule_applied=SUTRA_VARNAMELANA,
+            left_operand=dhatu_upadesha,
+            right_operand=tin_shuddha,
+            output=final_form,
+            metadata={"stage": "padanirvṛtti"},
+        )
 
         if final_form.endswith("s"):
             visarga_form = terminal_visarga_avasana(final_form)

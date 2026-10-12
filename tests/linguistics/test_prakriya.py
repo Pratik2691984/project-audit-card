@@ -143,6 +143,46 @@ class TestPrakriyaEngine(unittest.TestCase):
         self.assertIn("8.4.53", applied_3du)
         self.assertIn("8.3.15", applied_3du)
 
+    def test_svadi_tanadi_kryadi_cells(self):
+        """
+        Verify Classes 5, 8, and 9:
+          Class 5 (Svādi):  su + śnu -> sunoti (3sg), sunutaḥ (3du)
+          Class 8 (Tanādi): tan + u  -> tanoti (3sg), tanutaḥ (3du)
+          Class 9 (Kryādi): krī + śnā -> krīṇāti (3sg), krīṇītaḥ (3du via 6.4.112)
+        """
+        # Svādi: sunoti, sunutaḥ
+        tree_su_3sg = derive_lat_kartari("su", gana=Gana.SVADI, purusha=3, vacana=1)
+        self.assertEqual(tree_su_3sg.final_output, "sunoti")
+        self.assertIn("3.1.73", [s.rule_applied.number for s in tree_su_3sg.steps])
+        self.assertIn("7.3.84", [s.rule_applied.number for s in tree_su_3sg.steps])
+
+        tree_su_3du = derive_lat_kartari("su", gana=Gana.SVADI, purusha=3, vacana=2)
+        self.assertEqual(tree_su_3du.final_output, "sunutaḥ")
+        self.assertIn("1.2.4", [s.rule_applied.number for s in tree_su_3du.steps])
+        self.assertIn("8.3.15", [s.rule_applied.number for s in tree_su_3du.steps])
+
+        # Tanādi: tanoti, tanutaḥ
+        tree_tan_3sg = derive_lat_kartari("tan", gana=Gana.TANADI, purusha=3, vacana=1)
+        self.assertEqual(tree_tan_3sg.final_output, "tanoti")
+        self.assertIn("3.1.79", [s.rule_applied.number for s in tree_tan_3sg.steps])
+        self.assertIn("7.3.84", [s.rule_applied.number for s in tree_tan_3sg.steps])
+
+        tree_tan_3du = derive_lat_kartari("tan", gana=Gana.TANADI, purusha=3, vacana=2)
+        self.assertEqual(tree_tan_3du.final_output, "tanutaḥ")
+        self.assertIn("1.2.4", [s.rule_applied.number for s in tree_tan_3du.steps])
+        self.assertIn("8.3.15", [s.rule_applied.number for s in tree_tan_3du.steps])
+
+        # Kryādi: krīṇāti, krīṇītaḥ
+        tree_kri_3sg = derive_lat_kartari("krī", gana=Gana.KRYADI, purusha=3, vacana=1)
+        self.assertEqual(tree_kri_3sg.final_output, "krīṇāti")
+        self.assertIn("3.1.81", [s.rule_applied.number for s in tree_kri_3sg.steps])
+        self.assertIn("8.4.1", [s.rule_applied.number for s in tree_kri_3sg.steps])
+
+        tree_kri_3du = derive_lat_kartari("krī", gana=Gana.KRYADI, purusha=3, vacana=2)
+        self.assertEqual(tree_kri_3du.final_output, "krīṇītaḥ")
+        self.assertIn("6.4.112", [s.rule_applied.number for s in tree_kri_3du.steps])
+        self.assertIn("8.3.15", [s.rule_applied.number for s in tree_kri_3du.steps])
+
 
 if __name__ == "__main__":
     unittest.main()
