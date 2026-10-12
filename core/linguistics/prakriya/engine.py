@@ -1,6 +1,6 @@
 """
 engine.py - Pāṇinian Prakriyā (Derivation) Engine
-Executes step-by-step morphosyntactic derivation trees for tiṅanta forms across all 9 cells.
+Executes step-by-step morphosyntactic derivation trees for tiṅanta forms across gaṇas.
 """
 
 from dataclasses import dataclass
@@ -15,6 +15,7 @@ from core.linguistics.ast.nodes import (
 from core.linguistics.ast.sandhi import (
     apply_ad_gunah,
     apply_ecoyavayavah,
+    apply_hal_sandhi,
 )
 from core.linguistics.ast.sivasutras import expand_pratyahara
 
@@ -23,6 +24,7 @@ SUTRA_1_3_1 = SutraRef("1.3.1", "bhūvādayo dhātavaḥ", SutraType.SAMJNA)
 SUTRA_1_3_3 = SutraRef("1.3.3", "halantyam", SutraType.SAMJNA)
 SUTRA_1_3_8 = SutraRef("1.3.8", "laśakvataddhite", SutraType.SAMJNA)
 SUTRA_1_3_9 = SutraRef("1.3.9", "tasya lopaḥ", SutraType.VIDHI)
+SUTRA_2_4_72 = SutraRef("2.4.72", "adiprabhṛtibhyaḥ śapaḥ", SutraType.VIDHI)
 SUTRA_3_1_68 = SutraRef("3.1.68", "kartari śap", SutraType.VIDHI)
 SUTRA_3_2_123 = SutraRef("3.2.123", "vartamāne laṭ", SutraType.VIDHI)
 SUTRA_3_4_78 = SutraRef("3.4.78", "tiptasjhi...", SutraType.VIDHI)
@@ -67,7 +69,7 @@ PARASMAIPADA_MAP = {
     (1, 3): "mas",
 }
 
-# Expand yañ pratyāhāra: y, v, r, l, ñ, m, ṅ, ṇ, n, jh, bh
+# Expand yañ pratyāhāra
 YAN_PRATYAHARA = set(expand_pratyahara("yañ"))
 
 
@@ -81,6 +83,13 @@ def apply_it_lopa(pratyaya: str) -> str:
     return res
 
 
+def terminal_visarga_avasana(pada: str) -> str:
+    """Converts terminal padānta -s to -ḥ in avasāna."""
+    if pada.endswith("s"):
+        return pada[:-1] + "ḥ"
+    return pada
+
+
 def derive_lat_kartari(
     dhatu_upadesha: str,
     gana: Gana = Gana.BHVADI,
@@ -88,7 +97,8 @@ def derive_lat_kartari(
     vacana: int = 1,
 ) -> DerivationTree:
     """
-    Derives present indicative (laṭ parasmaipada) forms across all 9 cells.
+    Derives present indicative (laṭ parasmaipada) forms across Gaṇas.
+    Supports Gana.BHVADI (bhū -> bhavati) and Gana.ADADI (ad -> atti).
     """
     raw_tin = PARASMAIPADA_MAP[(purusha, vacana)]
     tree = DerivationTree(root_left=dhatu_upadesha, root_right=raw_tin)
@@ -140,17 +150,63 @@ def derive_lat_kartari(
             metadata={"stage": "it_lopa_tiṅ"},
         )
 
-    # 5. 3.1.68 Vikaraṇa (kartari śap for Bhvādi)
-    if gana == Gana.BHVADI:
+    # 5. 3.1.68 Vikaraṇa introduction (kartari śap)
+    tree.record_step(
+        rule_applied=SUTRA_3_1_68,
+        left_operand=dhatu_upadesha,
+        right_operand="śap",
+        output=f"{dhatu_upadesha} + śap + {tin_shuddha}",
+        metadata={"stage": "vikaraṇa"},
+    )
+
+    # ----------------------------------------------------
+    # Branch A: Adādi Gaṇa (2.4.72 luk śapaḥ)
+    # ----------------------------------------------------
+    if gana == Gana.ADADI:
+        # Step 6: 2.4.72 adiprabhṛtibhyaḥ śapaḥ (śap -> luk / ∅)
         tree.record_step(
-            rule_applied=SUTRA_3_1_68,
+            rule_applied=SUTRA_2_4_72,
             left_operand=dhatu_upadesha,
             right_operand="śap",
-            output=f"{dhatu_upadesha} + śap + {tin_shuddha}",
-            metadata={"stage": "vikaraṇa"},
+            output=f"{dhatu_upadesha} + {tin_shuddha}",
+            metadata={"stage": "luk_elision"},
         )
 
-        # 6. It-lopa on śap (śap -> a)
+        # Consonant contact or direct attachment
+        if tin_shuddha.startswith("a"):
+            # e.g., ad + anti -> adanti
+            final_form = f"{dhatu_upadesha}{tin_shuddha}"
+            tree.record_step(
+                rule_applied=SUTRA_VARNAMELANA,
+                left_operand=dhatu_upadesha,
+                right_operand=tin_shuddha,
+                output=final_form,
+                metadata={"stage": "padanirvṛtti"},
+            )
+        else:
+            # Consonant contact: ad + ti -> at + ti -> atti (via 8.4.55 khari ca)
+            sandhi_res = apply_hal_sandhi(dhatu_upadesha, tin_shuddha, tree=tree)
+            final_form = sandhi_res
+
+        # Visarga on terminal -s
+        if final_form.endswith("s"):
+            visarga_form = terminal_visarga_avasana(final_form)
+            tree.record_step(
+                rule_applied=SUTRA_8_3_15,
+                left_operand=final_form,
+                right_operand="",
+                output=visarga_form,
+                metadata={"stage": "avasāne_visargaḥ"},
+            )
+            final_form = visarga_form
+
+        return tree
+
+    # ----------------------------------------------------
+    # Branch B: Bhvādi Gaṇa (śap retains 'a')
+    # ----------------------------------------------------
+    if gana == Gana.BHVADI:
+        # Step 6: It-lopa on śap (śap -> a)
         vikarana = "a"
         tree.record_step(
             rule_applied=SUTRA_1_3_9,
@@ -160,7 +216,7 @@ def derive_lat_kartari(
             metadata={"stage": "it_lopa_vikaraṇa"},
         )
 
-        # 7. 7.3.84 Guṇa on ik-ending dhātu before sārvadhātuka (bhū -> bho)
+        # Step 7: 7.3.84 Guṇa on ik-ending dhātu before sārvadhātuka (bhū -> bho)
         dhatu_guna = dhatu_upadesha
         if dhatu_upadesha == "bhū":
             dhatu_guna = "bho"
@@ -172,9 +228,9 @@ def derive_lat_kartari(
                 metadata={"stage": "aṅga_guṇa"},
             )
 
-            # 8. 6.1.78 eco'yavāyāvaḥ (bho + a -> bhava)
+            # Step 8: 6.1.78 eco'yavāyāvaḥ (bho + a -> bhava)
             sandhi_res, _ = apply_ecoyavayavah(dhatu_guna, vikarana)
-            base_anga = sandhi_res  # "bhava"
+            base_anga = sandhi_res
             tree.record_step(
                 rule_applied=SUTRA_6_1_78,
                 left_operand=dhatu_guna,
@@ -185,8 +241,7 @@ def derive_lat_kartari(
         else:
             base_anga = f"{dhatu_upadesha}{vikarana}"
 
-        # 9. Aṅga adjustments and morpheme combination
-        # Case A: 7.1.3 + 6.1.97 ato guṇe for anti (bhava + anti -> bhavanti)
+        # Step 9: Aṅga adjustments before specific terminations
         if tin_shuddha == "anti":
             merged = base_anga[:-1] + tin_shuddha
             tree.record_step(
@@ -198,7 +253,6 @@ def derive_lat_kartari(
             )
             final_form = merged
 
-        # Case B: 7.3.101 ato dīrgho yañi (bhava -> bhavā before mi, vas, mas)
         elif tin_shuddha[0] in YAN_PRATYAHARA:
             lengthened_anga = base_anga[:-1] + "ā"
             final_form = f"{lengthened_anga}{tin_shuddha}"
@@ -210,7 +264,6 @@ def derive_lat_kartari(
                 metadata={"stage": "ato_dīrgho_yañi"},
             )
 
-        # Case C: Standard joining (bhava + ti -> bhavati, bhava + si -> bhavasi, etc.)
         else:
             final_form = f"{base_anga}{tin_shuddha}"
             tree.record_step(
@@ -221,9 +274,9 @@ def derive_lat_kartari(
                 metadata={"stage": "padanirvṛtti"},
             )
 
-        # 10. Padānta visarga (8.2.66 sasajuṣo ruḥ -> 8.3.15 kharavasānayoḥ)
+        # Step 10: Padānta visarga
         if final_form.endswith("s"):
-            visarga_form = final_form[:-1] + "ḥ"
+            visarga_form = terminal_visarga_avasana(final_form)
             tree.record_step(
                 rule_applied=SUTRA_8_3_15,
                 left_operand=final_form,
