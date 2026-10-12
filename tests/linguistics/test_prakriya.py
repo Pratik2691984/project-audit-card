@@ -81,6 +81,38 @@ class TestPrakriyaEngine(unittest.TestCase):
         applied_3pl = [step.rule_applied.number for step in tree_3pl.steps]
         self.assertIn("2.4.72", applied_3pl)
 
+    def test_hu_lat_juhotyadi_cells(self):
+        """
+        Verify Juhotyādi (Class 3) reduplication (6.1.10) and abhyāsa-kārya:
+          3sg: hu + tip -> juhu + ti -> juhoti (7.3.84 guṇa on pit)
+          3du: hu + tas -> juhu + tas -> juhutaḥ (1.2.4 apit blocks guṇa, 8.3.15 visarga)
+          3pl: hu + jhi -> juhu + ati -> juhvati (7.1.4 adabhyastāt + 6.1.77 yaṇ)
+        """
+        # 3sg: juhoti
+        tree_3sg = derive_lat_kartari("hu", gana=Gana.JUHOTYADI, purusha=3, vacana=1)
+        self.assertEqual(tree_3sg.final_output, "juhoti")
+        applied_3sg = [step.rule_applied.number for step in tree_3sg.steps]
+        self.assertIn("2.4.75", applied_3sg)  # ślu
+        self.assertIn("6.1.10", applied_3sg)  # dvitva
+        self.assertIn("8.4.54", applied_3sg)  # kuhoścuḥ
+        self.assertIn("8.4.55", applied_3sg)  # abhyāse carca
+        self.assertIn("7.3.84", applied_3sg)  # sārvadhātukārdhadhātukayoḥ guṇa
+
+        # 3du: juhutaḥ
+        tree_3du = derive_lat_kartari("hu", gana=Gana.JUHOTYADI, purusha=3, vacana=2)
+        self.assertEqual(tree_3du.final_output, "juhutaḥ")
+        applied_3du = [step.rule_applied.number for step in tree_3du.steps]
+        self.assertIn("1.2.4", applied_3du)   # sārvadhātukam apit
+        self.assertIn("8.3.15", applied_3du)  # visarjanīyaḥ
+        self.assertNotIn("7.3.84", applied_3du)  # guṇa must NOT fire
+
+        # 3pl: juhvati
+        tree_3pl = derive_lat_kartari("hu", gana=Gana.JUHOTYADI, purusha=3, vacana=3)
+        self.assertEqual(tree_3pl.final_output, "juhvati")
+        applied_3pl = [step.rule_applied.number for step in tree_3pl.steps]
+        self.assertIn("7.1.4", applied_3pl)   # adabhyastāt
+        self.assertIn("6.1.77", applied_3pl)  # iko yaṇaci
+
 
 if __name__ == "__main__":
     unittest.main()
