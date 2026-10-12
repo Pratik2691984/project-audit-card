@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { PrakriyaViewer } from './components/PrakriyaViewer';
-import { initialProjects } from './data/initialProjects';
+import { INITIAL_PROJECTS } from './data/initialProjects';
 import { ProjectAudit } from './types/audit';
 
 const App: React.FC = () => {
@@ -38,7 +38,7 @@ const App: React.FC = () => {
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              Research Audit Cards ({initialProjects.length})
+              Research Audit Cards ({INITIAL_PROJECTS.length})
             </button>
           </nav>
         </div>
@@ -53,7 +53,7 @@ const App: React.FC = () => {
                 Pāṇinian Morphological Derivation Inspector
               </h2>
               <p className="text-sm text-slate-400 mt-1">
-                Authoritative sūtra provenance and step-by-step phonological transformations across classical gaṇas.
+                Authoritative sūtra provenance, step-by-step phonological transformations, and badge matrices across classical gaṇas.
               </p>
             </div>
             <PrakriyaViewer />
@@ -70,7 +70,7 @@ const App: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {initialProjects.map((project: ProjectAudit) => (
+              {INITIAL_PROJECTS.map((project: ProjectAudit) => (
                 <div
                   key={project.id}
                   className="bg-slate-900 border border-slate-800/80 rounded-xl p-5 hover:border-slate-700 transition-all flex flex-col justify-between"
@@ -79,20 +79,31 @@ const App: React.FC = () => {
                     <div className="flex items-center justify-between text-xs font-mono text-slate-400 mb-2">
                       <span>{project.id}</span>
                       <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
-                        {project.category || 'Research'}
+                        {project.assignedTrack}
                       </span>
                     </div>
                     <h3 className="text-base font-semibold text-slate-200 mb-2">
-                      {project.title}
+                      {project.name}
                     </h3>
-                    <p className="text-xs text-slate-400 line-clamp-3">
-                      {project.description}
-                    </p>
+                    <div className="text-xs font-mono text-slate-400 space-y-1">
+                      <div className="flex justify-between">
+                        <span className="text-slate-500">Stage:</span>
+                        <span className="text-slate-300">{project.completionStage}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-500">Disposition:</span>
+                        <span className="text-slate-300">{project.disposition}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-500">Auditor:</span>
+                        <span className="text-slate-300">{project.auditor}</span>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-slate-800/60 flex items-center justify-between text-[11px] font-mono text-slate-500">
-                    <span>Status: {project.status || 'Spec Only'}</span>
-                    <span>v{project.version || '1.0'}</span>
+                  <div className="mt-4 pt-3 border-t border-slate-800/60 flex items-center justify-between text-[11px] font-mono text-slate-400">
+                    <span>Score: {project.scorePercentage}%</span>
+                    <span>Checks: {project.passedChecksCount}</span>
                   </div>
                 </div>
               ))}
