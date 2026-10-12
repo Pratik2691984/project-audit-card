@@ -6,7 +6,7 @@ A Pāṇinian computational linguistics engine with supporting audit tooling.
 
 - core/linguistics/prosody/ — Piṅgala meter scansion (L/G weights, gaṇa decomposition, wildcard cadence matching, verse scanner)
 - core/linguistics/ast/ — Śivasūtra pratyāhāra expansion, sandhi (ac/hal/visarga), Pāṇinian derivation tree
-- core/linguistics/prakriya/ — tiṅanta conjugation engine (gaṇas 1, 2, 3, 4, 6, 7; parasmaipada present active)
+- core/linguistics/prakriya/ — tiṅanta conjugation engine (all 10 gaṇas: Bhvādi through Curādi; parasmaipada present active)
 - udit_manifest.json — **spec only.** Describes 40 research projects; none exist on disk
 - src/ — React audit dashboard (renders the manifest)
 
@@ -21,4 +21,4 @@ A Pāṇinian computational linguistics engine with supporting audit tooling.
 
 ## Status
 
-78+ tests green. Gaṇas 5, 8, 9, 10 and ātmanepada not yet implemented.
+81 tests green. All 10 classical gaṇas implemented for laṭ parasmaipada. Ātmanepada and other lakāras not yet implemented.
