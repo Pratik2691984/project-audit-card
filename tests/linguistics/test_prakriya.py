@@ -15,15 +15,12 @@ class TestPrakriyaEngine(unittest.TestCase):
           Uttama:    bhavāmi,  bhavāvaḥ,  bhavāmaḥ
         """
         expected_matrix = {
-            # Prathama puruṣa (3rd person)
             (3, 1): "bhavati",
             (3, 2): "bhavataḥ",
             (3, 3): "bhavanti",
-            # Madhyama puruṣa (2nd person)
             (2, 1): "bhavasi",
             (2, 2): "bhavathaḥ",
             (2, 3): "bhavatha",
-            # Uttama puruṣa (1st person)
             (1, 1): "bhavāmi",
             (1, 2): "bhavāvaḥ",
             (1, 3): "bhavāmaḥ",
@@ -54,20 +51,13 @@ class TestPrakriyaEngine(unittest.TestCase):
             self.assertIn("7.3.101", applied_sutras)
 
     def test_ad_lat_adadi_cells(self):
-        """
-        Verify Adādi (Class 2) luk-elision of śap (2.4.72) and khari ca (8.4.55):
-          3sg: ad + ti   -> at + ti  -> atti
-          3du: ad + tas  -> at + tas -> attaḥ
-          3pl: ad + anti -> adanti
-        """
-        # 3sg: atti
+        """Verify Adādi (Class 2) luk-elision of śap (2.4.72) and khari ca (8.4.55)."""
         tree_3sg = derive_lat_kartari("ad", gana=Gana.ADADI, purusha=3, vacana=1)
         self.assertEqual(tree_3sg.final_output, "atti")
         applied_3sg = [step.rule_applied.number for step in tree_3sg.steps]
         self.assertIn("2.4.72", applied_3sg)
         self.assertIn("8.4.55", applied_3sg)
 
-        # 3du: attaḥ
         tree_3du = derive_lat_kartari("ad", gana=Gana.ADADI, purusha=3, vacana=2)
         self.assertEqual(tree_3du.final_output, "attaḥ")
         applied_3du = [step.rule_applied.number for step in tree_3du.steps]
@@ -75,43 +65,59 @@ class TestPrakriyaEngine(unittest.TestCase):
         self.assertIn("8.4.55", applied_3du)
         self.assertIn("8.3.15", applied_3du)
 
-        # 3pl: adanti
         tree_3pl = derive_lat_kartari("ad", gana=Gana.ADADI, purusha=3, vacana=3)
         self.assertEqual(tree_3pl.final_output, "adanti")
         applied_3pl = [step.rule_applied.number for step in tree_3pl.steps]
         self.assertIn("2.4.72", applied_3pl)
 
     def test_hu_lat_juhotyadi_cells(self):
-        """
-        Verify Juhotyādi (Class 3) reduplication (6.1.10) and abhyāsa-kārya:
-          3sg: hu + tip -> juhu + ti -> juhoti (7.3.84 guṇa on pit)
-          3du: hu + tas -> juhu + tas -> juhutaḥ (1.2.4 apit blocks guṇa, 8.3.15 visarga)
-          3pl: hu + jhi -> juhu + ati -> juhvati (7.1.4 adabhyastāt + 6.1.77 yaṇ)
-        """
-        # 3sg: juhoti
+        """Verify Juhotyādi (Class 3) reduplication (6.1.10) and abhyāsa-kārya (6.1.4)."""
         tree_3sg = derive_lat_kartari("hu", gana=Gana.JUHOTYADI, purusha=3, vacana=1)
         self.assertEqual(tree_3sg.final_output, "juhoti")
         applied_3sg = [step.rule_applied.number for step in tree_3sg.steps]
-        self.assertIn("2.4.75", applied_3sg)  # ślu
-        self.assertIn("6.1.10", applied_3sg)  # dvitva
-        self.assertIn("8.4.54", applied_3sg)  # kuhoścuḥ
-        self.assertIn("8.4.55", applied_3sg)  # abhyāse carca
-        self.assertIn("7.3.84", applied_3sg)  # sārvadhātukārdhadhātukayoḥ guṇa
+        self.assertIn("2.4.75", applied_3sg)
+        self.assertIn("6.1.10", applied_3sg)
+        self.assertIn("6.1.4", applied_3sg)
+        self.assertIn("7.4.62", applied_3sg)
+        self.assertIn("8.4.54", applied_3sg)
+        self.assertIn("7.3.84", applied_3sg)
 
-        # 3du: juhutaḥ
         tree_3du = derive_lat_kartari("hu", gana=Gana.JUHOTYADI, purusha=3, vacana=2)
         self.assertEqual(tree_3du.final_output, "juhutaḥ")
         applied_3du = [step.rule_applied.number for step in tree_3du.steps]
-        self.assertIn("1.2.4", applied_3du)   # sārvadhātukam apit
-        self.assertIn("8.3.15", applied_3du)  # visarjanīyaḥ
-        self.assertNotIn("7.3.84", applied_3du)  # guṇa must NOT fire
+        self.assertIn("1.2.4", applied_3du)
+        self.assertIn("8.3.15", applied_3du)
+        self.assertNotIn("7.3.84", applied_3du)
 
-        # 3pl: juhvati
         tree_3pl = derive_lat_kartari("hu", gana=Gana.JUHOTYADI, purusha=3, vacana=3)
         self.assertEqual(tree_3pl.final_output, "juhvati")
         applied_3pl = [step.rule_applied.number for step in tree_3pl.steps]
-        self.assertIn("7.1.4", applied_3pl)   # adabhyastāt
-        self.assertIn("6.1.77", applied_3pl)  # iko yaṇaci
+        self.assertIn("7.1.4", applied_3pl)
+        self.assertIn("6.1.77", applied_3pl)
+
+    def test_nrt_divadi_cells(self):
+        """Verify Divādi (Class 4) 3.1.69 śyan (ya) with 1.1.5 kniti ca blocking guṇa."""
+        tree_3sg = derive_lat_kartari("nṛt", gana=Gana.DIVADI, purusha=3, vacana=1)
+        self.assertEqual(tree_3sg.final_output, "nṛtyati")
+        applied = [step.rule_applied.number for step in tree_3sg.steps]
+        self.assertIn("3.1.69", applied)
+        self.assertIn("1.1.5", applied)
+        self.assertNotIn("7.3.84", applied)
+        self.assertNotIn("7.3.86", applied)
+
+    def test_tud_tudadi_cells(self):
+        """Verify Tudādi (Class 6) 3.1.77 śa (a) with 1.2.4 apit blocking guṇa."""
+        tree_3sg = derive_lat_kartari("tud", gana=Gana.TUDADI, purusha=3, vacana=1)
+        self.assertEqual(tree_3sg.final_output, "tudati")
+        applied = [step.rule_applied.number for step in tree_3sg.steps]
+        self.assertIn("3.1.77", applied)
+        self.assertIn("1.2.4", applied)
+        self.assertNotIn("7.3.84", applied)
+        self.assertNotIn("7.3.86", applied)
+
+        tree_vis = derive_lat_kartari("viś", gana=Gana.TUDADI, purusha=3, vacana=1)
+        self.assertEqual(tree_vis.final_output, "viśati")
+        self.assertNotEqual(tree_vis.final_output, "veśati")
 
 
 if __name__ == "__main__":
