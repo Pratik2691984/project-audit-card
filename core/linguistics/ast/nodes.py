@@ -4,7 +4,7 @@ nodes.py - AST nodes, provenance references, and derivation tree structures.
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import List, Optional, Any
+from typing import List, Optional, Any, Dict
 
 
 class SutraType(Enum):
@@ -14,6 +14,43 @@ class SutraType(Enum):
     NIYAMA = "niyama"
     ADHIKARA = "adhikāra"
     ATIDESHA = "atideśa"
+
+
+class PrakriyaStage(str, Enum):
+    DHATU_SAMJNA = "dhātu_saṃjñā"
+    LAKARA_VIDHI = "lakāra_vidhi"
+    TIN_ADESHA = "tiṅ_ādeśa"
+    IT_LOPA_TIN = "it_lopa_tiṅ"
+    VIKARANA_VIDHI = "vikaraṇa_vidhi"
+    IT_LOPA_VIKARANA = "it_lopa_vikaraṇa"
+    LUK_ELISION = "luk_elision"
+    SLU_ELISION = "ślu_elision"
+    DVITVA = "dvitva"
+    ABHYASA_SAMJNA = "abhyāsa_saṃjñā"
+    ABHYASA_KARYA = "abhyāsa_kārya"
+    ABHYASE_CARCA = "abhyāse_carca"
+    ANGA_GUNA = "aṅga_guṇa"
+    VIKARANA_GUNA = "vikaraṇa_guṇa"
+    PRATYAYA_GUNA = "pratyaya_guṇa"
+    LAGHUPADHA_GUNA = "laghūpadha_guṇa"
+    GUNA_PRATISHEDHA = "guṇa_pratiṣedha"
+    APIT_AGUNA = "apit_aguṇa"
+    MIT_AC_ANTYAT_PARAH = "mit_ac_antyat_parah"
+    SNASOR_ALLOPAH = "śnasor_allopaḥ"
+    SNA_IITVA = "śnā_īttva"
+    RASABHYAM_NO_NAH = "raṣabhyam_no_nah"
+    JHASAS_TATHOR_DHAH = "jhaṣas_tathor_dhaḥ"
+    JHALAM_JAS_JHASI = "jhalāṁ_jaś_jhaśi"
+    KHARI_CA_CARITVA = "khari_ca_caritva"
+    HAL_SANDHI = "hal_sandhi"
+    AC_SANDHI = "ac_sandhi"
+    ECO_YAVAYAVAH = "eco_yavāyāvaḥ"
+    ATO_GUNE = "ato_guṇe"
+    ATO_DIRGHO_YANI = "ato_dīrgho_yañi"
+    JHO_ANTAH = "jho_antaḥ"
+    ADABHYASTAT = "adabhyastāt"
+    AVASANE_VISARGAH = "avasāne_visargaḥ"
+    PADANIRVRITTI = "padanirvṛtti"
 
 
 @dataclass(frozen=True)
@@ -39,7 +76,7 @@ class DerivationStep:
     output: str
     governing_adhikara: Optional[SutraRef] = None
     is_ekadesha: bool = False
-    metadata: dict = field(default_factory=dict)
+    metadata: Dict[str, Any] = field(default_factory=dict)
 
 
 # Alias required by __init__.py and external consumers
@@ -60,8 +97,15 @@ class DerivationTree:
         output: str,
         governing_adhikara: Optional[SutraRef] = None,
         is_ekadesha: bool = False,
-        **metadata: Any,
+        metadata: Optional[Dict[str, Any]] = None,
+        **extra_metadata: Any,
     ) -> None:
+        merged_metadata: Dict[str, Any] = {}
+        if metadata:
+            merged_metadata.update(metadata)
+        if extra_metadata:
+            merged_metadata.update(extra_metadata)
+
         step = DerivationStep(
             rule_applied=rule_applied,
             left_operand=left_operand,
@@ -69,7 +113,7 @@ class DerivationTree:
             output=output,
             governing_adhikara=governing_adhikara,
             is_ekadesha=is_ekadesha,
-            metadata=metadata,
+            metadata=merged_metadata,
         )
         self.steps.append(step)
 
